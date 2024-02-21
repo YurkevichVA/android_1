@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TurtleView turtleView = new TurtleView(this, null);
-        setContentView(turtleView);
+        Intent serviceIntent = new Intent(this, BackgroundService.class);
+        startService(serviceIntent);
     }
 }
