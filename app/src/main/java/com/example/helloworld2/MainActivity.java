@@ -1,69 +1,91 @@
 package com.example.helloworld2;
 
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.net.Uri;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
-import android.widget.TextView;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.example.helloworld2.Contact;
+import com.example.helloworld2.ContactAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView sentenceTextView;
-    private Button generateButton;
-    private List<String> first;
-    private List<String> second;
-    private List<String> third;
+
+    private EditText searchEditText;
+    private RecyclerView contactsRecyclerView;
+    private List<Contact> contactList;
+    private ContactAdapter contactAdapter; // You'll need to create this adapter
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sentenceTextView = findViewById(R.id.sentenceTextView);
-        generateButton = findViewById(R.id.generateButton);
+        FloatingActionButton addContactButton = findViewById(R.id.addContactButton);
+        addContactButton.setOnClickListener(view -> showAddContactDialog());
 
-        first = loadWords("first.txt");
-        second = loadWords("second.txt");
-        third = loadWords("third.txt");
+        searchEditText = findViewById(R.id.searchEditText);
+        contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
 
-        generateButton.setOnClickListener(view -> generateSentence());
-    }
-    private List<String> loadWords(String filename) {
-        List<String> words = new ArrayList<>();
-        try (InputStream is = getAssets().open(filename);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                words.add(line);
+        contactList = new ArrayList<>();
+        // You'll eventually load contacts from the database here
+
+        contactAdapter = new ContactAdapter(contactList);
+        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        contactsRecyclerView.setAdapter(contactAdapter);
+
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterContacts(s.toString());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return words;
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
-    private void generateSentence() {
-        Random random = new Random();
-        String firstWord = first.get(random.nextInt(first.size()));
-        String secondWord = second.get(random.nextInt(second.size()));
-        String thirdWord = third.get(random.nextInt(third.size()));
+    private void filterContacts(String searchText) {
+        List<Contact> filteredList = new ArrayList<>();
+        for (Contact contact : contactList) {
+            if (contact.getName().toLowerCase().contains(searchText.toLowerCase()) ||
+                    contact.getPhoneNumber().contains(searchText)) {
+                filteredList.add(contact);
+            }
+        }
 
-        String sentence = firstWord + " " + secondWord + " " + thirdWord + ".";
-        sentenceTextView.setText(sentence);
+        contactAdapter.updateContactList(filteredList);
+    }
+
+    // In MainActivity:
+    private void showAddContactDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.add_contact);
+
+        EditText nameEditText = dialog.findViewById(R.id.nameEditText);
+        EditText phoneEditText = dialog.findViewById(R.id.phoneEditText);
+        Button saveButton = dialog.findViewById(R.id.saveButton);
+
+        saveButton.setOnClickListener(view -> {
+            String name = nameEditText.getText().toString();
+            String phone = phoneEditText.getText().toString();
+            Contact newContact = new Contact(name, phone);
+            contactList.add(newContact);
+            contactAdapter.notifyDataSetChanged();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }
