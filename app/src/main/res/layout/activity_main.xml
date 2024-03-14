@@ -1,81 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?><!-- res/layout/activity_main.xml -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
-
-    <TextView
-        android:id="@+id/textViewSender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sender Account:"
-        android:textSize="18sp" />
-
-    <Spinner
-        android:id="@+id/senderSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewSender"
-        android:layout_marginTop="8dp"
-        />
-
-    <TextView
-        android:id="@+id/textViewReceiver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Receiver Account:"
-        android:textSize="18sp"
-        android:layout_below="@id/senderSpinner"
-        android:layout_marginTop="16dp"/>
-
-    <Spinner
-        android:id="@+id/receiverSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewReceiver"
-        android:layout_marginTop="8dp"
-        />
+    tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editTextAmount"
+        android:id="@+id/editTextStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/receiverSpinner"
-        android:layout_marginTop="16dp"
-        android:hint="Amount"
-        android:inputType="numberDecimal" />
+        android:hint="Введіть статус"
+        android:inputType="text" />
 
     <Button
-        android:id="@+id/buttonSend"
-        android:layout_width="match_parent"
+        android:id="@+id/buttonTweet"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextAmount"
-        android:layout_marginTop="16dp"
-        android:text="Send" />
+        android:text="Відправити статус" />
 
-    <Button
-        android:id="@+id/buttonCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buttonSend"
-        android:layout_marginTop="16dp"
-        android:text="Cancel" />
-
-    <TextView
-        android:id="@+id/textViewAccountList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buttonCancel"
-        android:layout_marginTop="16dp"
-        android:text="Account List:"
-        android:textSize="18sp" />
-
-    <ListView
-        android:id="@+id/listViewAccounts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewAccountList"
-        android:layout_marginTop="8dp" />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
